@@ -1,11 +1,11 @@
-[![build-and-push](https://github.com/EugenMayer/docker-image-jodconverter/actions/workflows/build.yml/badge.svg)](https://github.com/EugenMayer/docker-image-jodconverter/actions/workflows/build.yml)
+[![build-and-push](https://github.com/jodconverter/docker-image-jodconverter-runtime/actions/workflows/build.yml/badge.svg)](https://github.com/jodconverter/docker-image-jodconverter-runtime/actions/workflows/build.yml)
 
 ## Wat
 
 Docker image to provide everything that is needed to run [JODconverter](https://github.com/jodconverter/jodconverter).
 It includes LibreOffice and all needed libraries.
 
-It does not include jodconverter as an app, see [JODconverter Example Apps](https://github.com/EugenMayer/docker-image-jodconverter)
+It does not include JODconverter as an app, see [JODconverter Example Apps](https://github.com/EugenMayer/docker-image-jodconverter)
 for example projects build on top of this runtime, running JODconverter example apps.
 
 ## Builds info
