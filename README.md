@@ -5,7 +5,7 @@
 Docker image to provide everything that is needed to run [JODconverter](https://github.com/jodconverter/jodconverter).
 It includes LibreOffice and all needed libraries.
 
-It does not include JODconverter as an app, see [JODconverter Example Apps](https://github.com/EugenMayer/docker-image-jodconverter)
+It does not include JODconverter as an app, see [JODconverter Example Apps](https://github.com/jodconverter/docker-image-jodconverter-examples)
 for example projects build on top of this runtime, running JODconverter example apps.
 
 ## Builds info
@@ -14,7 +14,7 @@ for example projects build on top of this runtime, running JODconverter example 
 - LibreOffice is 6.1.5+ right now
 
 Hint: We cannot split [JODconverter](https://github.com/jodconverter/jodconverter) and LibreOffice into two separate images since for now, `JODconverter` has to be running on the same machine as LibreOffice.
-The main reason behind this is, that [JODconverter](https://github.com/sbraconnier/jodconverter) does manage the LibreOffice instances itself, starts and stop them. It does not just connect to it (and if, it uses a local socket)
+The main reason behind this is, that [JODconverter](https://github.com/jodconverter/jodconverter) does manage the LibreOffice instances itself, starts and stop them. It does not just connect to it (and if, it uses a local socket)
 
 ## Credits
 

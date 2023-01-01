@@ -4,7 +4,7 @@ on:
   push:
 
 env:
-  IMAGE_FQDN: ghcr.io/jodconverter/jodconverter-base
+  IMAGE_FQDN: ghcr.io/jodconverter/jodconverter-runtime
 
 jobs:
   docker:

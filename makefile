@@ -1,3 +1,3 @@
 build:
-	docker build -t ghcr.io/eugenmayer/jodconverter-runtime:latest .
+	docker build -t ghcr.io/jodconverter/jodconverter-runtime:latest .
 
