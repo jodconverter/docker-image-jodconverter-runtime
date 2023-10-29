@@ -10,8 +10,8 @@ for example projects build on top of this runtime, running JODconverter example 
 
 ## Builds info
 
-- Official OpenJDK 17 Java (bellsoft debian based)(since that is what we want with docker)
-- LibreOffice is 6.1.5+ right now
+- Official debian/bookworm with OpenJDK 21 Java (eclipse/temurin jlink based)
+- LibreOffice is 7.4.+ right now
 
 Hint: We cannot split [JODconverter](https://github.com/jodconverter/jodconverter) and LibreOffice into two separate images since for now, `JODconverter` has to be running on the same machine as LibreOffice.
 The main reason behind this is, that [JODconverter](https://github.com/jodconverter/jodconverter) does manage the LibreOffice instances itself, starts and stop them. It does not just connect to it (and if, it uses a local socket)
