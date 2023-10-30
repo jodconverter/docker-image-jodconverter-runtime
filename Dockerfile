@@ -37,9 +37,8 @@ RUN apt-get update && apt-get -y install \
 # running jodconverter - the app is packaged in a different repo
 
 ############ jdk ############
-ARG TARGET_BASE_IMAGE
 
-FROM $TARGET_BASE_IMAGE as jdk
+FROM jre as jdk
 ARG JAVA_VERSION
 
 # see https://adoptium.net/installation/linux/
