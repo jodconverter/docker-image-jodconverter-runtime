@@ -22,6 +22,11 @@ ARG JAVA_VERSION
 
 ENV JAVA_HOME=/opt/java/openjdk
 ENV PATH "${JAVA_HOME}/bin:${PATH}"
+
+# expose our GOSU user
+ENV NONPRIVUSER=jodconverter
+ENV NONPRIVGROUP=jodconverter
+
 COPY --from=jresource /jre $JAVA_HOME
 
 RUN apt-get update && apt-get -y install \
@@ -30,7 +35,7 @@ RUN apt-get update && apt-get -y install \
   # procps needed for us finding the libreoffice process, see https://github.com/sbraconnier/jodconverter/issues/127#issuecomment-463668183
   procps \
   && apt-get -y install libreoffice libreoffice-java-common --no-install-recommends \
-  && useradd -m jodconverter \
+  && useradd -m $NONPRIVUSER -g $NONPRIVGROUP \
   && rm -rf /var/lib/apt/lists/*
 
 # We do not need a CMD nor ENTRYPOINT, since we are not going to run anything. This is just the libreoffice runtime for \
@@ -41,6 +46,7 @@ RUN apt-get update && apt-get -y install \
 FROM jre as jdk
 ARG JAVA_VERSION
 
+# unset old JAVA_HOME (matches JRE) since we use a JDK here
 ENV JAVA_HOME ""
 
 # see https://adoptium.net/installation/linux/
@@ -51,6 +57,7 @@ RUN unset JAVA_HOME \
     && echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list \
     && apt update \
     && apt install -y temurin-${JAVA_VERSION}-jdk \
+    && apt autoclean -y && apt clean -y \
     # rm jdk
     && rm -fr /opt/java/openjdk
 
