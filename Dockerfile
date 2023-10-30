@@ -35,6 +35,7 @@ RUN apt-get update && apt-get -y install \
   # procps needed for us finding the libreoffice process, see https://github.com/sbraconnier/jodconverter/issues/127#issuecomment-463668183
   procps \
   && apt-get -y install libreoffice libreoffice-java-common --no-install-recommends \
+  && groupadd $NONPRIVGROUP \
   && useradd -m $NONPRIVUSER -g $NONPRIVGROUP \
   && rm -rf /var/lib/apt/lists/*
 
