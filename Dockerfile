@@ -39,6 +39,11 @@ RUN apt-get update && apt-get -y install \
   && useradd -m $NONPRIVUSER -g $NONPRIVGROUP \
   && rm -rf /var/lib/apt/lists/*
 
+# create font-cache for our gosu user
+USER jodconverter
+RUN fc-cache -fr
+USER root
+
 # We do not need a CMD nor ENTRYPOINT, since we are not going to run anything. This is just the libreoffice runtime for \
 # running jodconverter - the app is packaged in a different repo
 
