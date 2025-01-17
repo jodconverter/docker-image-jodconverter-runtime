@@ -27,6 +27,10 @@ ENV PATH "${JAVA_HOME}/bin:${PATH}"
 ENV NONPRIVUSER=jodconverter
 ENV NONPRIVGROUP=jodconverter
 
+# Set default characterset encoding to UTF-8
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+
 COPY --from=jresource /jre $JAVA_HOME
 
 # using backports for libreoffice 24.x (bookworm has 7.x)
