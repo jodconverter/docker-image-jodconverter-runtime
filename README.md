@@ -1,4 +1,4 @@
-[![build-and-push](https://github.com/jodconverter/docker-image-jodconverter-runtime/actions/workflows/build.yml/badge.svg)](https://github.com/jodconverter/docker-image-jodconverter-runtime/actions/workflows/build.yml)
+[![build-and-push](https://github.com/tsteidle/docker-image-jodconverter-runtime/actions/workflows/build.yml/badge.svg)](https://github.com/tsteidle/docker-image-jodconverter-runtime/actions/workflows/build.yml)
 
 ## Wat
 
@@ -10,7 +10,7 @@ for example projects build on top of this runtime, running JODconverter example 
 
 ## Builds info
 
-- Official debian/bookworm with OpenJDK 17 Java (eclipse/temurin jlink based)
+- Official debian/bookworm with OpenJDK 21 Java (eclipse/temurin jlink based)
 - LibreOffice is 7.4.+ right now
 
 Hint: We cannot split [JODconverter](https://github.com/jodconverter/jodconverter) and LibreOffice into two separate images since for now, `JODconverter` has to be running on the same machine as LibreOffice.
@@ -19,4 +19,3 @@ The main reason behind this is, that [JODconverter](https://github.com/jodconver
 ## Credits
 
 Credits to [LibreOffice](https://de.libreoffice.org/) for actually giving us the headless mode and the conversion options in the first place.
-
