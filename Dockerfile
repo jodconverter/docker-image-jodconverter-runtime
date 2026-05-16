@@ -3,7 +3,7 @@ ARG JAVA_VERSION=25
 
 ############ JRESOURCE ############
 FROM eclipse-temurin:${JAVA_VERSION}-jdk-noble as jresource
-ENV JAVA_MODULES=java.base,java.compiler,java.datatransfer,java.desktop,java.instrument,java.logging,java.management,java.management.rmi,java.naming,java.net.http,java.prefs,java.rmi,java.scripting,java.se,java.security.jgss,java.security.sasl,java.smartcardio,java.sql,java.sql.rowset,java.transaction.xa,java.xml,java.xml.crypto,jdk.accessibility,jdk.charsets,jdk.crypto.cryptoki,jdk.crypto.ec,jdk.dynalink,jdk.httpserver,jdk.incubator.vector,jdk.internal.vm.ci,jdk.internal.vm.compiler,jdk.internal.vm.compiler.management,jdk.jdwp.agent,jdk.jfr,jdk.jsobject,jdk.localedata,jdk.management,jdk.management.agent,jdk.management.jfr,jdk.naming.dns,jdk.naming.rmi,jdk.net,jdk.nio.mapmode,jdk.sctp,jdk.security.auth,jdk.security.jgss,jdk.unsupported,jdk.xml.dom,jdk.zipfs
+ENV JAVA_MODULES=java.base,java.compiler,java.datatransfer,java.desktop,java.instrument,java.logging,java.management,java.management.rmi,java.naming,java.net.http,java.prefs,java.rmi,java.scripting,java.se,java.security.jgss,java.security.sasl,java.smartcardio,java.sql,java.sql.rowset,java.transaction.xa,java.xml,java.xml.crypto,jdk.accessibility,jdk.charsets,jdk.crypto.cryptoki,jdk.crypto.ec,jdk.dynalink,jdk.httpserver,jdk.incubator.vector,jdk.internal.vm.ci,jdk.graal.compiler,jdk.graal.compiler.management,jdk.jdwp.agent,jdk.jfr,jdk.jsobject,jdk.localedata,jdk.management,jdk.management.agent,jdk.management.jfr,jdk.naming.dns,jdk.naming.rmi,jdk.net,jdk.nio.mapmode,jdk.sctp,jdk.security.auth,jdk.security.jgss,jdk.unsupported,jdk.xml.dom,jdk.zipfs
 
 RUN $JAVA_HOME/bin/jlink \
     --add-modules $JAVA_MODULES \
@@ -33,15 +33,16 @@ ENV LC_ALL=C.UTF-8
 
 COPY --from=jresource /jre $JAVA_HOME
 
-# using backports for libreoffice 24.x (bookworm has 7.x)
-RUN echo 'deb http://deb.debian.org/debian bookworm-backports main' > /etc/apt/sources.list.d/backports.list \
+# using backports for libreoffice 26.x (trixie has 25.x)
+RUN echo 'deb http://deb.debian.org/debian trixie-backports main' > /etc/apt/sources.list.d/backports.list \
+  && echo 'deb http://deb.debian.org/debian trixie contrib' > /etc/apt/sources.list.d/contrib.list \
   && apt-get update && apt-get -y install \
-  apt-transport-https locales-all libpng16-16 libxinerama1 libgl1-mesa-glx libfontconfig1 libfreetype6 libxrender1 \
+  apt-transport-https locales-all libpng16-16 libxinerama1 glx-alternative-mesa libfontconfig1 libfreetype6 libxrender1 \
   libxcb-shm0 libxcb-render0 adduser cpio findutils gosu \
   # procps needed for us finding the libreoffice process, see https://github.com/sbraconnier/jodconverter/issues/127#issuecomment-463668183
   procps \
-  # using backports for libreoffice 24.x (bookworm has 7.x)
-  && apt-get -y install -t bookworm-backports libreoffice libreoffice-base libreoffice-common libreoffice-base-core \
+  # using backports for libreoffice 26.x (trixie has 25.x)
+  && apt-get -y install -t trixie-backports libreoffice libreoffice-base libreoffice-common libreoffice-base-core \
   && groupadd $NONPRIVGROUP \
   && useradd -m $NONPRIVUSER -g $NONPRIVGROUP \
   && rm -rf /var/lib/apt/lists/*
