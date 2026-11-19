@@ -1,24 +1,30 @@
 ARG TARGET_BASE_IMAGE=debian:trixie
-ARG JAVA_VERSION=25
 
 ############ JRESOURCE ############
-FROM eclipse-temurin:${JAVA_VERSION}-jdk-noble as jresource
+FROM amazoncorretto:25 as jresource
 ENV JAVA_MODULES=java.base,java.compiler,java.datatransfer,java.desktop,java.instrument,java.logging,java.management,java.management.rmi,java.naming,java.net.http,java.prefs,java.rmi,java.scripting,java.se,java.security.jgss,java.security.sasl,java.smartcardio,java.sql,java.sql.rowset,java.transaction.xa,java.xml,java.xml.crypto,jdk.accessibility,jdk.charsets,jdk.crypto.cryptoki,jdk.crypto.ec,jdk.dynalink,jdk.httpserver,jdk.incubator.vector,jdk.internal.vm.ci,jdk.graal.compiler,jdk.graal.compiler.management,jdk.jdwp.agent,jdk.jfr,jdk.jsobject,jdk.localedata,jdk.management,jdk.management.agent,jdk.management.jfr,jdk.naming.dns,jdk.naming.rmi,jdk.net,jdk.nio.mapmode,jdk.sctp,jdk.security.auth,jdk.security.jgss,jdk.unsupported,jdk.xml.dom,jdk.zipfs
+
+RUN dnf install -y binutils \
+ # the jdk/jre is missing ca certificate on corretto, install those
+ && dnf install -y ca-certificates \
+ && update-ca-trust \
+ && dnf clean all
 
 RUN $JAVA_HOME/bin/jlink \
     --add-modules $JAVA_MODULES \
     --strip-debug \
     --no-man-pages \
     --no-header-files \
-    --compress=2 \
-    --output /jre
+    --output /jre \
+ # add the ca-certificates that we miss with corretto
+ && rm -f /jre/lib/security/cacerts \
+ && cp -L /etc/pki/java/cacerts /jre/lib/security/cacerts \
+ && /jre/bin/keytool -list -cacerts -storepass changeit | head -2
 
 ############ JRE ############
 ARG TARGET_BASE_IMAGE
 
 FROM $TARGET_BASE_IMAGE as jre
-
-ARG JAVA_VERSION
 
 ENV JAVA_HOME=/opt/java/openjdk
 ENV PATH "${JAVA_HOME}/bin:${PATH}"
@@ -58,20 +64,8 @@ USER root
 ############ jdk ############
 
 FROM jre as jdk
-ARG JAVA_VERSION
+ENV JAVA_HOME=/opt/java/openjdk
 
-# unset old JAVA_HOME (matches JRE) since we use a JDK here
-ENV JAVA_HOME ""
-
-# see https://adoptium.net/installation/linux/
-RUN unset JAVA_HOME \
-    && apt update && apt install -y wget apt-transport-https \
-    && mkdir -p /etc/apt/keyrings \
-    && wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc \
-    && echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list \
-    && apt update \
-    && apt install -y temurin-${JAVA_VERSION}-jdk \
-    && apt autoclean -y && apt clean -y \
-    # rm jdk
-    && rm -fr /opt/java/openjdk
-
+COPY --from=javabase /usr/lib/jvm/java-25-amazon-corretto $JAVA_HOME
+# add the ca-certificates that we miss with corretto
+COPY --from=javabase /jre/lib/security/cacerts $JAVA_HOME/lib/security/cacerts
